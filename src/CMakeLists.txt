@@ -2,7 +2,8 @@ set(ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 set(INCLUDE_DIR "${ROOT_DIR}/include")
 set(HEADER_FILES
-        "${INCLUDE_DIR}/sharlibs/dylib.hpp")
+        "${INCLUDE_DIR}/sharlibs/dynamic_library.hpp"
+        "${INCLUDE_DIR}/sharlibs/metaprogramming.hpp")
 
 add_library(
         "${PROJECT_NAME}" STATIC

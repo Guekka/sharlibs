@@ -7,4 +7,4 @@ macro(add_example NAME)
     target_link_libraries("example_${NAME}" PRIVATE "${PROJECT_NAME}")
 endmacro()
 
-add_example(dylib)
+add_example(libc)

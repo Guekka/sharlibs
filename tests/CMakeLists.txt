@@ -4,7 +4,7 @@ set(INCLUDE_DIR "${ROOT_DIR}/tests")
 
 set(SOURCE_DIR "${ROOT_DIR}/tests")
 set(SOURCE_FILES
-        "${SOURCE_DIR}/dylib.cpp")
+        "${SOURCE_DIR}/dynamic_library.cpp")
 
 add_executable(tests ${SOURCE_FILES})
 
