@@ -1,0 +1,37 @@
+author = 'Guekka'
+cpp = 20
+description = 'modern shared libraries loader'
+github = 'Guekka/sharlibs'
+license = [ 'MIT', 'https://github.com/Guekka/sharlibs/blob/main/LICENSE' ]
+name = 'sharlibs'
+navbar = [ 'classes', 'namespaces' ]
+
+#[badges]
+#'a-architecture' = [
+#	'https://img.shields.io/static/v1?label=architecture&message=x64&color=dimgray&style=flat-square',
+#	'#'
+#]
+#'a-platform' = [
+#	'https://img.shields.io/static/v1?label=platform&message=windows%20|%20linux&color=dimgray&style=flat-square',
+#	'#'
+#]
+#'build' = [
+#	'https://img.shields.io/github/actions/workflow/status/Ryan-rsm-McKenzie/bsa/main_ci.yml?branch=master&logo=github&style=flat-square',
+#	'https://github.com/Ryan-rsm-McKenzie/bsa/actions/workflows/main_ci.yml'
+#]
+#'codecov' = [
+#	'https://img.shields.io/codecov/c/github/Ryan-rsm-McKenzie/bsa?logo=codecov&logoColor=white&style=flat-square',
+#	'https://app.codecov.io/gh/Ryan-rsm-McKenzie/bsa'
+#]
+
+[images]
+paths = [ '@DOCS_DIR@/images' ]
+
+[sources]
+extract_all = true
+paths = [ '@DOCS_DIR@/index.doxy' ]
+recursive_paths = [ '@INCLUDE_DIR@' ]
+strip_paths = [ '@INCLUDE_DIR@' ]
+
+[warnings]
+treat_as_errors = true
