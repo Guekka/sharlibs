@@ -33,7 +33,7 @@ struct DynamicFunction
     constexpr static detail::FixedString name = function_name;
 };
 
-template<detail::FixedString library>
+template<detail::FixedString library, DynamicFunction... functions>
 class DynamicLib
 {
     std::unique_ptr<void, detail::IntegralFunction<detail::native_close>> handle_;
@@ -57,6 +57,7 @@ public:
     template<DynamicFunction func, class... Args, class Func = typename decltype(func)::function_type>
     [[nodiscard]] auto call(Args &&...args) -> std::optional<std::invoke_result_t<Func, Args...>>
         requires std::is_invocable_v<Func, Args...> && (!std::is_void_v<std::invoke_result_t<Func, Args...>>)
+                 && (detail::is_present_v<decltype(func), decltype(functions)...>)
     {
         if (auto symbol = get_symbol(func.name.chars); symbol != nullptr)
         {

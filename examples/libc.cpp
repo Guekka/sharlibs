@@ -6,7 +6,7 @@ constexpr auto f_exit = sharlibs::DynamicFunction<"exit", int(int)>{};
 
 auto main() -> int
 {
-    auto lib = sharlibs::DynamicLib<"libc.so.6">::open();
+    auto lib = sharlibs::DynamicLib<"libc.so.6", f_exit>::open();
     if (!lib.has_value())
     {
         std::cerr << "Failed to open dynamic library\n";

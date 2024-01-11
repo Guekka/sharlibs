@@ -24,4 +24,12 @@ struct FixedString
 template<size_t N>
 FixedString(const char (&arr)[N]) -> FixedString<N - 1>; // Drop the null terminator
 
+template<class What, class... Args>
+struct is_present : std::disjunction<std::is_same<What, Args>...>
+{
+};
+
+template<class What, class... Args>
+constexpr auto is_present_v = is_present<What, Args...>::value;
+
 } // namespace sharlibs::detail

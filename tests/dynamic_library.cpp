@@ -36,11 +36,12 @@ TEST_CASE("DynamicLib::call")
 
     SECTION("Returns the result of the function if the symbol can be called")
     {
-        auto lib = sharlibs::DynamicLib<"libc.so.6">::open();
+        constexpr auto f_tolower = sharlibs::DynamicFunction<"tolower", decltype(tolower)>{};
+
+        auto lib = sharlibs::DynamicLib<"libc.so.6", f_tolower>::open();
         REQUIRE(lib.has_value());
 
-        constexpr auto f_tolower = sharlibs::DynamicFunction<"tolower", decltype(tolower)>{};
-        auto result              = lib->call<f_tolower>('A');
+        auto result = lib->call<f_tolower>('A');
         REQUIRE(result.has_value());
         REQUIRE(result.value() == 'a');
     }
