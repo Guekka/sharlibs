@@ -43,7 +43,10 @@ class DynamicLib
     {
     }
 
-    [[nodiscard]] auto get_symbol(const char *name) -> void * { return dlsym(handle_.get(), name); }
+    [[nodiscard]] auto get_symbol(const char *name) const noexcept -> void *
+    {
+        return dlsym(handle_.get(), name);
+    }
 
 public:
     [[nodiscard]] static auto open() -> std::optional<DynamicLib>
@@ -55,7 +58,8 @@ public:
     }
 
     template<DynamicFunction func, class... Args, class Func = typename decltype(func)::function_type>
-    [[nodiscard]] auto call(Args &&...args) -> std::optional<std::invoke_result_t<Func, Args...>>
+    [[nodiscard]] auto call(Args &&...args) const noexcept
+        -> std::optional<std::invoke_result_t<Func, Args...>>
         requires std::is_invocable_v<Func, Args...> && (!std::is_void_v<std::invoke_result_t<Func, Args...>>)
                  && (detail::is_present_v<decltype(func), decltype(functions)...>)
     {
@@ -69,7 +73,7 @@ public:
     }
 
     template<DynamicFunction func, class... Args, class Func = typename decltype(func)::function_type>
-    [[nodiscard]] auto call(Args &&...args) -> std::optional<std::monostate>
+    [[nodiscard]] auto call(Args &&...args) const noexcept -> std::optional<std::monostate>
         requires std::is_invocable_v<Func, Args...> && std::is_void_v<std::invoke_result_t<Func, Args...>>
     {
         if (auto symbol = get_symbol(func.name.chars); symbol != nullptr)

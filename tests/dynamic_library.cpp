@@ -36,9 +36,9 @@ TEST_CASE("DynamicLib::call")
 
     SECTION("Returns the result of the function if the symbol can be called")
     {
-        constexpr auto f_tolower = sharlibs::DynamicFunction<"tolower", decltype(tolower)>{};
+        constexpr auto f_tolower = sharlibs::DynamicFunction<"tolower", int(int)>{};
 
-        auto lib = sharlibs::DynamicLib<"libc.so.6", f_tolower>::open();
+        const auto lib = sharlibs::DynamicLib<"libc.so.6", f_tolower>::open();
         REQUIRE(lib.has_value());
 
         auto result = lib->call<f_tolower>('A');
