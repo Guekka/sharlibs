@@ -6,7 +6,7 @@ using ExitType = void(int);
 
 auto main() -> int
 {
-    auto lib = sharlibs::DynamicLib::open("libc.so.6");
+    auto lib = sharlibs::DynamicLib<"libc.so.6">::open();
     if (!lib.has_value())
     {
         std::cerr << "Failed to open dynamic library\n";

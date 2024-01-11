@@ -24,6 +24,7 @@ inline void native_close(native_handle handle)
 }
 } // namespace detail
 
+template<detail::FixedString library>
 class DynamicLib
 {
     std::unique_ptr<void, detail::IntegralFunction<detail::native_close>> handle_;
@@ -36,9 +37,9 @@ class DynamicLib
     [[nodiscard]] auto get_symbol(const char *name) -> void * { return dlsym(handle_.get(), name); }
 
 public:
-    [[nodiscard]] static auto open(const char *path) -> std::optional<DynamicLib>
+    [[nodiscard]] static auto open() -> std::optional<DynamicLib>
     {
-        if (auto handle = detail::native_open(path); handle != nullptr)
+        if (auto handle = detail::native_open(library.chars); handle != nullptr)
             return DynamicLib{handle};
 
         return std::nullopt;
@@ -73,9 +74,13 @@ public:
     }
 };
 
-static_assert(std::is_nothrow_move_constructible_v<DynamicLib>);
-static_assert(std::is_nothrow_move_assignable_v<DynamicLib>);
-static_assert(std::is_nothrow_destructible_v<DynamicLib>);
-static_assert(!std::is_nothrow_default_constructible_v<DynamicLib>);
+namespace detail {
 
+using ExampleLib = DynamicLib<FixedString{"libc.so.6"}>;
+
+static_assert(std::is_nothrow_move_constructible_v<ExampleLib>);
+static_assert(std::is_nothrow_move_assignable_v<ExampleLib>);
+static_assert(std::is_nothrow_destructible_v<ExampleLib>);
+static_assert(!std::is_nothrow_default_constructible_v<ExampleLib>);
+} // namespace detail
 } // namespace sharlibs
