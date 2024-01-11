@@ -24,6 +24,15 @@ inline void native_close(native_handle handle)
 }
 } // namespace detail
 
+template<detail::FixedString function_name, class Prototype>
+struct DynamicFunction
+{
+    constexpr DynamicFunction() noexcept = default;
+
+    using function_type                       = Prototype;
+    constexpr static detail::FixedString name = function_name;
+};
+
 template<detail::FixedString library>
 class DynamicLib
 {
@@ -45,12 +54,11 @@ public:
         return std::nullopt;
     }
 
-    template<class Func, class... Args>
-    [[nodiscard]] auto call(const char *name, Args &&...args)
-        -> std::optional<std::invoke_result_t<Func, Args...>>
+    template<DynamicFunction func, class... Args, class Func = typename decltype(func)::function_type>
+    [[nodiscard]] auto call(Args &&...args) -> std::optional<std::invoke_result_t<Func, Args...>>
         requires std::is_invocable_v<Func, Args...> && (!std::is_void_v<std::invoke_result_t<Func, Args...>>)
     {
-        if (auto symbol = get_symbol(name); symbol != nullptr)
+        if (auto symbol = get_symbol(func.name.chars); symbol != nullptr)
         {
             auto function = reinterpret_cast<std::add_pointer_t<Func>>(symbol);
             return std::invoke(function, std::forward<Args>(args)...);
@@ -59,11 +67,11 @@ public:
         return std::nullopt;
     }
 
-    template<class Func, class... Args>
-    [[nodiscard]] auto call(const char *name, Args &&...args) -> std::optional<std::monostate>
+    template<DynamicFunction func, class... Args, class Func = typename decltype(func)::function_type>
+    [[nodiscard]] auto call(Args &&...args) -> std::optional<std::monostate>
         requires std::is_invocable_v<Func, Args...> && std::is_void_v<std::invoke_result_t<Func, Args...>>
     {
-        if (auto symbol = get_symbol(name); symbol != nullptr)
+        if (auto symbol = get_symbol(func.name.chars); symbol != nullptr)
         {
             auto function = reinterpret_cast<std::add_pointer_t<Func>>(symbol);
             std::invoke(function, std::forward<Args>(args)...);

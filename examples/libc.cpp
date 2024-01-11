@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-using ExitType = void(int);
+constexpr auto f_exit = sharlibs::DynamicFunction<"exit", int(int)>{};
 
 auto main() -> int
 {
@@ -13,7 +13,7 @@ auto main() -> int
         return 1;
     }
 
-    auto success = lib->call<ExitType>("exit", 0);
+    auto success = lib->call<f_exit>(0);
     if (!success.has_value())
     {
         std::cerr << "Failed to call exit\n";

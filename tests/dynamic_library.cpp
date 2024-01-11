@@ -29,7 +29,8 @@ TEST_CASE("DynamicLib::call")
         auto lib = sharlibs::DynamicLib<"libc.so.6">::open();
         REQUIRE(lib.has_value());
 
-        auto result = lib->call<decltype(exit)>("does_not_exist", 0);
+        constexpr auto f_exit = sharlibs::DynamicFunction<"does_not_exist", decltype(exit)>{};
+        auto result           = lib->call<f_exit>(0);
         REQUIRE(!result.has_value());
     }
 
@@ -38,7 +39,8 @@ TEST_CASE("DynamicLib::call")
         auto lib = sharlibs::DynamicLib<"libc.so.6">::open();
         REQUIRE(lib.has_value());
 
-        auto result = lib->call<decltype(tolower)>("tolower", 'A');
+        constexpr auto f_tolower = sharlibs::DynamicFunction<"tolower", decltype(tolower)>{};
+        auto result              = lib->call<f_tolower>('A');
         REQUIRE(result.has_value());
         REQUIRE(result.value() == 'a');
     }
