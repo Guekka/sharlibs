@@ -41,8 +41,24 @@ TEST_CASE("DynamicLib::call")
         const auto lib = sharlibs::DynamicLib<"libc.so.6", f_tolower>::open();
         REQUIRE(lib.has_value());
 
-        auto result = lib->call<f_tolower>('A');
+        std::optional<int> result = lib->call<f_tolower>('A');
         REQUIRE(result.has_value());
         REQUIRE(result.value() == 'a');
+    }
+    SECTION("Several functions can be loaded")
+    {
+        constexpr auto f_tolower = sharlibs::DynamicFunction<"tolower", int(int)>{};
+        constexpr auto f_toupper = sharlibs::DynamicFunction<"toupper", int(int)>{};
+
+        const auto lib = sharlibs::DynamicLib<"libc.so.6", f_tolower, f_toupper>::open();
+        REQUIRE(lib.has_value());
+
+        std::optional<int> result = lib->call<f_tolower>('A');
+        REQUIRE(result.has_value());
+        REQUIRE(result.value() == 'a');
+
+        result = lib->call<f_toupper>('a');
+        REQUIRE(result.has_value());
+        REQUIRE(result.value() == 'A');
     }
 }
