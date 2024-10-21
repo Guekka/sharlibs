@@ -5,12 +5,10 @@
   };
 
   outputs = {
-    self,
     nixpkgs,
-    devenv,
     systems,
     ...
-  } @ inputs: let
+  }: let
     forEachSystem = nixpkgs.lib.genAttrs (import systems);
   in {
     devShells =
