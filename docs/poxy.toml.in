@@ -5,6 +5,7 @@ github = 'Guekka/sharlibs'
 license = [ 'MIT', 'https://github.com/Guekka/sharlibs/blob/main/LICENSE' ]
 name = 'sharlibs'
 navbar = [ 'classes', 'namespaces' ]
+excluded_symbols = 'detail'
 
 #[badges]
 #'a-architecture' = [
@@ -23,9 +24,6 @@ navbar = [ 'classes', 'namespaces' ]
 #	'https://img.shields.io/codecov/c/github/Ryan-rsm-McKenzie/bsa?logo=codecov&logoColor=white&style=flat-square',
 #	'https://app.codecov.io/gh/Ryan-rsm-McKenzie/bsa'
 #]
-
-[images]
-paths = [ '@DOCS_DIR@/images' ]
 
 [sources]
 extract_all = true
