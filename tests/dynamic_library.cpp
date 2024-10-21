@@ -26,11 +26,12 @@ TEST_CASE("DynamicLib::call")
 {
     SECTION("Returns std::nullopt if the symbol does not exist")
     {
-        auto lib = sharlibs::DynamicLib<"libc.so.6">::open();
+        constexpr auto f_exit = sharlibs::DynamicFunction<"does_not_exist", decltype(exit)>{};
+
+        auto lib = sharlibs::DynamicLib<"libc.so.6", f_exit>::open();
         REQUIRE(lib.has_value());
 
-        constexpr auto f_exit = sharlibs::DynamicFunction<"does_not_exist", decltype(exit)>{};
-        auto result           = lib->call<f_exit>(0);
+        auto result = lib->call<f_exit>(0);
         REQUIRE(!result.has_value());
     }
 

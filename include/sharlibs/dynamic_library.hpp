@@ -59,28 +59,24 @@ public:
 
     template<DynamicFunction func, class... Args, class Func = typename decltype(func)::function_type>
     [[nodiscard]] auto call(Args &&...args) const noexcept
-        -> std::optional<std::invoke_result_t<Func, Args...>>
-        requires std::is_invocable_v<Func, Args...> && (!std::is_void_v<std::invoke_result_t<Func, Args...>>)
+        -> std::optional<std::conditional_t<std::is_void_v<std::invoke_result_t<Func, Args...>>,
+                                            std::monostate,
+                                            std::invoke_result_t<Func, Args...>>>
+        requires std::is_invocable_v<Func, Args...>
                  && (detail::is_present_v<decltype(func), decltype(functions)...>)
     {
         if (auto symbol = get_symbol(func.name.chars); symbol != nullptr)
         {
             auto function = reinterpret_cast<std::add_pointer_t<Func>>(symbol);
-            return std::invoke(function, std::forward<Args>(args)...);
-        }
-
-        return std::nullopt;
-    }
-
-    template<DynamicFunction func, class... Args, class Func = typename decltype(func)::function_type>
-    [[nodiscard]] auto call(Args &&...args) const noexcept -> std::optional<std::monostate>
-        requires std::is_invocable_v<Func, Args...> && std::is_void_v<std::invoke_result_t<Func, Args...>>
-    {
-        if (auto symbol = get_symbol(func.name.chars); symbol != nullptr)
-        {
-            auto function = reinterpret_cast<std::add_pointer_t<Func>>(symbol);
-            std::invoke(function, std::forward<Args>(args)...);
-            return std::monostate{};
+            if constexpr (std::is_void_v<std::invoke_result_t<Func, Args...>>)
+            {
+                std::invoke(function, std::forward<Args>(args)...);
+                return std::monostate{};
+            }
+            else
+            {
+                return std::invoke(function, std::forward<Args>(args)...);
+            }
         }
 
         return std::nullopt;
