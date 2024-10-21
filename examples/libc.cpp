@@ -13,8 +13,7 @@ auto main() -> int
         return 1;
     }
 
-    auto success = lib->call<f_exit>(0);
-    if (!success.has_value())
+    if (auto success = lib->call<f_exit>(0); !success.has_value())
     {
         std::cerr << "Failed to call exit\n";
         return 1;

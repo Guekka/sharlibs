@@ -5,7 +5,7 @@ TEST_CASE("IntegralFunction")
 {
     SECTION("Can be constructed from a function pointer")
     {
-        using F = sharlibs::detail::IntegralFunction<exit>;
+        using F = sharlibs::detail::IntegralFunction<&exit>;
         STATIC_REQUIRE(std::is_same_v<F, sharlibs::detail::IntegralFunction<exit>>);
         STATIC_REQUIRE(F::value == exit);
     }
@@ -19,7 +19,7 @@ struct S
 TEST_CASE("FixedString")
 {
     // NOLINTNEXTLINE(cppcoreguidelines-avoid-c-arrays,hicpp-avoid-c-arrays,modernize-avoid-c-arrays)
-    constexpr const char c_str[] = "Hello, world!";
+    constexpr char c_str[] = "Hello, world!";
 
     SECTION("Can be constructed from a string literal")
     {

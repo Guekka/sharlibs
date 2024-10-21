@@ -5,13 +5,13 @@ TEST_CASE("DynamicLib::open")
 {
     SECTION("Returns std::nullopt if the library does not exist")
     {
-        auto lib = sharlibs::DynamicLib<"does_not_exist">::open();
+        const auto lib = sharlibs::DynamicLib<"does_not_exist">::open();
         REQUIRE(!lib.has_value());
     }
 
     SECTION("Returns std::nullopt if the library cannot be opened")
     {
-        auto lib = sharlibs::DynamicLib<"tests/dynamic_library.cpp">::open();
+        const auto lib = sharlibs::DynamicLib<"tests/dynamic_library.cpp">::open();
         REQUIRE(!lib.has_value());
     }
 
